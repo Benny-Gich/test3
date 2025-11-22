@@ -7,7 +7,7 @@ import 'package:test3/core/theme/theme.dart';
 import 'package:test3/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:test3/features/auth/presentation/pages/login_page.dart';
 import 'package:test3/features/auth/presentation/pages/signup_page.dart';
-import 'package:test3/features/blog/di/init_dependencies.dart';
+import 'package:test3/features/auth/di/init_dependencies.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -29,14 +29,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserLoginImpl _userLoginImpl;
   final CurrentUser _currentUser;
 
-  void _onAuthIsUserLoggedIn(
+  FutureOr<void> _onAuthIsUserLoggedIn(
     AuthIsUserLoggedIn event,
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
     final res = await _currentUser(Params());
 
-    res.fold((l) => emit(AuthFailure(l.message)), (r) => emit(AuthSuccess(r)));
+    res.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (profile) => emit(AuthSuccess(profile)),
+    );
   }
 
   FutureOr<void> _onAuthSignUp(
@@ -51,10 +54,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.passWord,
       ),
     );
-    res.fold(
-      (failure) => emit(AuthFailure(failure.message)),
-      (profile) => emit(AuthSuccess(profile)),
-    );
+    res.fold((failure) => emit(AuthFailure(failure.message)), (profile) {
+      // ignore: avoid_print
+      print(profile.id);
+      emit(AuthSuccess(profile));
+    });
   }
 
   FutureOr<void> _onAuthLogIn(AuthLogIn event, Emitter<AuthState> emit) async {

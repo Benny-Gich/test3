@@ -16,7 +16,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       if (currentUserSession != null) {
         // Use a small helper to allow easier testing (can be overridden in tests)
-        final profileData = await queryProfileById(currentUserSession!.user.id);
+        final profileData = await supabaseClient
+            .from('profiles')
+            .select()
+            .eq('id', currentUserSession!.user.id);
         return ProfileModel.fromJson(profileData.first);
       }
     } catch (e) {

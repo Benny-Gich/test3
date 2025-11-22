@@ -14,4 +14,11 @@ class ProfileModel extends Profile {
       password: map['password'] ?? '',
     );
   }
+  Profile copyWith({String? id, String? email, String? password}) {
+    return Profile(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      password: password ?? this.password,
+    );
+  }
 }
