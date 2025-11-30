@@ -2,9 +2,10 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:test3/core/common/cubit/app_user/app_user_cubit.dart';
 import 'package:test3/core/error/failure.dart';
 import 'package:test3/core/usecase/usecase.dart';
-import 'package:test3/features/auth/domain/entities/profile.dart';
+import 'package:test3/core/entities/profile.dart';
 import 'package:test3/features/auth/domain/usecase/current_user.dart';
 import 'package:test3/features/auth/domain/usecase/user_login_impl.dart';
 import 'package:test3/features/auth/domain/usecase/user_signup_impl.dart';
@@ -16,10 +17,13 @@ class MockUserSignUpImpl extends Mock implements UserSignUpImpl {}
 
 class MockUserLoginImpl extends Mock implements UserLoginImpl {}
 
+class MockAppUserCubit extends Mock implements AppUserCubit {}
+
 void main() {
   late MockCurrentUser mockCurrentUser;
   late MockUserSignUpImpl mockUserSignUpImpl;
   late MockUserLoginImpl mockUserLoginImpl;
+  late MockAppUserCubit mockAppUserCubit;
 
   setUpAll(() {
     registerFallbackValue(Params());
@@ -33,6 +37,7 @@ void main() {
     mockCurrentUser = MockCurrentUser();
     mockUserSignUpImpl = MockUserSignUpImpl();
     mockUserLoginImpl = MockUserLoginImpl();
+    mockAppUserCubit = MockAppUserCubit();
   });
 
   blocTest<AuthBloc, AuthState>(
@@ -41,6 +46,7 @@ void main() {
       currentUser: mockCurrentUser,
       userSignUpImpl: mockUserSignUpImpl,
       userLoginImpl: mockUserLoginImpl,
+      appUserCubit: mockAppUserCubit,
     ),
     setUp: () {
       final profile = Profile(id: '1', email: 'a@b.com', password: 'secret');
@@ -61,6 +67,7 @@ void main() {
       currentUser: mockCurrentUser,
       userSignUpImpl: mockUserSignUpImpl,
       userLoginImpl: mockUserLoginImpl,
+      appUserCubit: mockAppUserCubit,
     ),
     setUp: () {
       final profile = Profile(id: '2', email: 'c@d.com', password: 'secret2');
@@ -82,6 +89,7 @@ void main() {
       currentUser: mockCurrentUser,
       userSignUpImpl: mockUserSignUpImpl,
       userLoginImpl: mockUserLoginImpl,
+      appUserCubit: mockAppUserCubit,
     ),
     setUp: () {
       final failure = Failure('signup failed');
@@ -103,6 +111,7 @@ void main() {
       currentUser: mockCurrentUser,
       userSignUpImpl: mockUserSignUpImpl,
       userLoginImpl: mockUserLoginImpl,
+      appUserCubit: mockAppUserCubit,
     ),
     setUp: () {
       final profile = Profile(id: '3', email: 'x@y.com', password: 'pw');
@@ -123,6 +132,7 @@ void main() {
       currentUser: mockCurrentUser,
       userSignUpImpl: mockUserSignUpImpl,
       userLoginImpl: mockUserLoginImpl,
+      appUserCubit: mockAppUserCubit,
     ),
     setUp: () {
       final failure = Failure('login failed');
@@ -143,6 +153,7 @@ void main() {
       currentUser: mockCurrentUser,
       userSignUpImpl: mockUserSignUpImpl,
       userLoginImpl: mockUserLoginImpl,
+      appUserCubit: mockAppUserCubit,
     ),
     setUp: () {
       final failure = Failure('no user');

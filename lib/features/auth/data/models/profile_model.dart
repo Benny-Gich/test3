@@ -1,4 +1,4 @@
-import 'package:test3/features/auth/domain/entities/profile.dart';
+import 'package:test3/core/entities/profile.dart';
 
 class ProfileModel extends Profile {
   ProfileModel({

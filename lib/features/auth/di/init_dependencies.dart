@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test3/core/app_secrets/app_secrets.dart';
+import 'package:test3/core/common/cubit/app_user/app_user_cubit.dart';
 import 'package:test3/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:test3/features/auth/data/datasources/auth_remote_data_source_impl.dart';
 import 'package:test3/features/auth/data/repository/auth_repository_impl.dart';
@@ -37,12 +38,14 @@ void _initAuth() {
   serviceLocator.registerFactory<CurrentUser>(
     () => CurrentUser(serviceLocator()),
   );
+  serviceLocator.registerLazySingleton<AppUserCubit>(() => serviceLocator());
 
   serviceLocator.registerLazySingleton(
     () => AuthBloc(
       userSignUpImpl: serviceLocator(),
       userLoginImpl: serviceLocator(),
       currentUser: serviceLocator(),
+      appUserCubit: serviceLocator(),
     ),
   );
 }

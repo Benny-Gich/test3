@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test3/core/common/cubit/app_user/app_user_cubit.dart';
 import 'package:test3/core/usecase/usecase.dart';
-import 'package:test3/features/auth/domain/entities/profile.dart';
+import 'package:test3/core/entities/profile.dart';
 import 'package:test3/features/auth/domain/usecase/current_user.dart';
 import 'package:test3/features/auth/domain/usecase/user_login_impl.dart';
 import 'package:test3/features/auth/domain/usecase/user_signup_impl.dart';
@@ -17,9 +18,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required CurrentUser currentUser,
     required UserSignUpImpl userSignUpImpl,
     required UserLoginImpl userLoginImpl,
+    required AppUserCubit appUserCubit,
   }) : _userSignUpImpl = userSignUpImpl,
        _userLoginImpl = userLoginImpl,
        _currentUser = currentUser,
+       _appUserCubit = appUserCubit,
        super(AuthInitial()) {
     on<AuthSignUp>(_onAuthSignUp);
     on<AuthLogIn>(_onAuthLogIn);
@@ -28,6 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserSignUpImpl _userSignUpImpl;
   final UserLoginImpl _userLoginImpl;
   final CurrentUser _currentUser;
+  final AppUserCubit _appUserCubit;
 
   FutureOr<void> _onAuthIsUserLoggedIn(
     AuthIsUserLoggedIn event,
@@ -38,7 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     res.fold(
       (failure) => emit(AuthFailure(failure.message)),
-      (profile) => emit(AuthSuccess(profile)),
+      (profile) => _emitAuthSuccess(profile, emit),
     );
   }
 
@@ -54,11 +58,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.passWord,
       ),
     );
-    res.fold((failure) => emit(AuthFailure(failure.message)), (profile) {
-      // ignore: avoid_print
-      print(profile.id);
-      emit(AuthSuccess(profile));
-    });
+    res.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (profile) => _emitAuthSuccess(profile, emit),
+    );
   }
 
   FutureOr<void> _onAuthLogIn(AuthLogIn event, Emitter<AuthState> emit) async {
@@ -68,7 +71,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     res.fold(
       (failure) => emit(AuthFailure(failure.message)),
-      (profile) => emit(AuthSuccess(profile)),
+      (profile) => _emitAuthSuccess(profile, emit),
     );
+  }
+
+  FutureOr<void> _emitAuthSuccess(Profile profile, Emitter<AuthState> emit) {
+    _appUserCubit.updateProfile(profile);
+    emit(AuthSuccess(profile));
   }
 }

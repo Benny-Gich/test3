@@ -3,7 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 import 'package:test3/core/error/exception.dart';
 import 'package:test3/core/error/failure.dart';
 import 'package:test3/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:test3/features/auth/domain/entities/profile.dart';
+import 'package:test3/core/entities/profile.dart';
 import 'package:test3/features/auth/domain/repository/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
