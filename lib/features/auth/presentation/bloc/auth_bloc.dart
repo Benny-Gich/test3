@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test3/core/common/cubit/app_user/app_user_cubit.dart';
 import 'package:test3/core/usecase/usecase.dart';
 import 'package:test3/core/entities/profile.dart';
 import 'package:test3/features/auth/domain/usecase/current_user.dart';
@@ -18,12 +17,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required CurrentUser currentUser,
     required UserSignUpImpl userSignUpImpl,
     required UserLoginImpl userLoginImpl,
-    required AppUserCubit appUserCubit,
+   // required AppUserCubit appUserCubit,
   }) : _userSignUpImpl = userSignUpImpl,
        _userLoginImpl = userLoginImpl,
        _currentUser = currentUser,
-       _appUserCubit = appUserCubit,
+      // _appUserCubit = appUserCubit,
        super(AuthInitial()) {
+    on<AuthEvent>((_, emit) => emit(AuthLoading()));
     on<AuthSignUp>(_onAuthSignUp);
     on<AuthLogIn>(_onAuthLogIn);
     on<AuthIsUserLoggedIn>(_onAuthIsUserLoggedIn);
@@ -31,13 +31,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserSignUpImpl _userSignUpImpl;
   final UserLoginImpl _userLoginImpl;
   final CurrentUser _currentUser;
-  final AppUserCubit _appUserCubit;
+ // final AppUserCubit _appUserCubit;
 
   FutureOr<void> _onAuthIsUserLoggedIn(
     AuthIsUserLoggedIn event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
     final res = await _currentUser(Params());
 
     res.fold(
@@ -50,7 +49,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignUp event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
     final res = await _userSignUpImpl(
       UserSignUpParams(
         name: event.name,
@@ -65,7 +63,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   FutureOr<void> _onAuthLogIn(AuthLogIn event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
     final res = await _userLoginImpl(
       UserLoginParams(email: event.email, password: event.passWord),
     );
@@ -75,8 +72,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  FutureOr<void> _emitAuthSuccess(Profile profile, Emitter<AuthState> emit) {
-    _appUserCubit.updateProfile(profile);
+  void _emitAuthSuccess(Profile profile, Emitter<AuthState> emit) {
+    // _appUserCubit.updateProfile(profile);
     emit(AuthSuccess(profile));
   }
 }

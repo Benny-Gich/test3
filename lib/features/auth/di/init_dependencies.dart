@@ -14,38 +14,46 @@ import 'package:test3/features/auth/presentation/bloc/auth_bloc.dart';
 final serviceLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
-  _initAuth();
-  final supabase = await Supabase.initialize(
-    url: AppSecrets.supabaseurl,
-    anonKey: AppSecrets.supabaseAnonKey,
+  // final supabase = await
+  serviceLocator.registerLazySingletonAsync<Supabase>(
+    () => Supabase.initialize(
+      url: AppSecrets.supabaseurl,
+      anonKey: AppSecrets.supabaseAnonKey,
+    ),
   );
-  serviceLocator.registerLazySingleton(() => supabase.client);
+  await serviceLocator.isReady<Supabase>();
+  serviceLocator.registerLazySingleton<SupabaseClient>(
+    () => serviceLocator<Supabase>().client,
+  );
+  _initAuth();
 }
 
 void _initAuth() {
-  serviceLocator.registerFactory<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(supabaseClient: serviceLocator()),
+  serviceLocator.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(
+      supabaseClient: serviceLocator<SupabaseClient>(),
+    ),
   );
-  serviceLocator.registerFactory<AuthRepository>(
-    () => AuthRepositoryImpl(serviceLocator()),
+  serviceLocator.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(serviceLocator<AuthRemoteDataSource>()),
   );
-  serviceLocator.registerFactory<UserSignUpImpl>(
-    () => UserSignUpImpl(serviceLocator()),
+  serviceLocator.registerLazySingleton<UserSignUpImpl>(
+    () => UserSignUpImpl(serviceLocator<AuthRepository>()),
   );
-  serviceLocator.registerFactory<UserLoginImpl>(
-    () => UserLoginImpl(serviceLocator()),
+  serviceLocator.registerLazySingleton<UserLoginImpl>(
+    () => UserLoginImpl(serviceLocator<AuthRepository>()),
   );
-  serviceLocator.registerFactory<CurrentUser>(
-    () => CurrentUser(serviceLocator()),
+  serviceLocator.registerLazySingleton<CurrentUser>(
+    () => CurrentUser(serviceLocator<AuthRepository>()),
   );
-  serviceLocator.registerLazySingleton<AppUserCubit>(() => serviceLocator());
+
+  serviceLocator.registerLazySingleton<AppUserCubit>(AppUserCubit.new);
 
   serviceLocator.registerLazySingleton(
     () => AuthBloc(
-      userSignUpImpl: serviceLocator(),
-      userLoginImpl: serviceLocator(),
-      currentUser: serviceLocator(),
-      appUserCubit: serviceLocator(),
+      userSignUpImpl: serviceLocator<UserSignUpImpl>(),
+      userLoginImpl: serviceLocator<UserLoginImpl>(),
+      currentUser: serviceLocator<CurrentUser>(),
     ),
   );
 }

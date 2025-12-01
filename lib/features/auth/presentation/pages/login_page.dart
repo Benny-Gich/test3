@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test3/core/common/widgets/utils/loader.dart';
@@ -9,7 +10,8 @@ import 'package:test3/features/auth/presentation/widgets/auth_field.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
-  static route() => MaterialPageRoute(builder: (context) => LogInPage());
+  static String route = 'LoginRoute';
+  static String path = '/login';
 
   @override
   State<LogInPage> createState() => _LogInPageState();
@@ -112,7 +114,9 @@ class _LogInPageState extends State<LogInPage> {
                         SizedBox(height: 20),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(context, SignUpPage.route());
+                            context.router.navigate(
+                              NamedRoute(SignUpPage.route),
+                            );
                           },
                           child: RichText(
                             text: TextSpan(

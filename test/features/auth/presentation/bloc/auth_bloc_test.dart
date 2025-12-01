@@ -46,7 +46,6 @@ void main() {
       currentUser: mockCurrentUser,
       userSignUpImpl: mockUserSignUpImpl,
       userLoginImpl: mockUserLoginImpl,
-      appUserCubit: mockAppUserCubit,
     ),
     setUp: () {
       final profile = Profile(id: '1', email: 'a@b.com', password: 'secret');
@@ -67,7 +66,6 @@ void main() {
       currentUser: mockCurrentUser,
       userSignUpImpl: mockUserSignUpImpl,
       userLoginImpl: mockUserLoginImpl,
-      appUserCubit: mockAppUserCubit,
     ),
     setUp: () {
       final profile = Profile(id: '2', email: 'c@d.com', password: 'secret2');
@@ -89,7 +87,6 @@ void main() {
       currentUser: mockCurrentUser,
       userSignUpImpl: mockUserSignUpImpl,
       userLoginImpl: mockUserLoginImpl,
-      appUserCubit: mockAppUserCubit,
     ),
     setUp: () {
       final failure = Failure('signup failed');
@@ -111,7 +108,6 @@ void main() {
       currentUser: mockCurrentUser,
       userSignUpImpl: mockUserSignUpImpl,
       userLoginImpl: mockUserLoginImpl,
-      appUserCubit: mockAppUserCubit,
     ),
     setUp: () {
       final profile = Profile(id: '3', email: 'x@y.com', password: 'pw');
@@ -132,7 +128,6 @@ void main() {
       currentUser: mockCurrentUser,
       userSignUpImpl: mockUserSignUpImpl,
       userLoginImpl: mockUserLoginImpl,
-      appUserCubit: mockAppUserCubit,
     ),
     setUp: () {
       final failure = Failure('login failed');
@@ -153,7 +148,6 @@ void main() {
       currentUser: mockCurrentUser,
       userSignUpImpl: mockUserSignUpImpl,
       userLoginImpl: mockUserLoginImpl,
-      appUserCubit: mockAppUserCubit,
     ),
     setUp: () {
       final failure = Failure('no user');
