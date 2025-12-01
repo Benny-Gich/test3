@@ -25,10 +25,6 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton<SupabaseClient>(
     () => serviceLocator<Supabase>().client,
   );
-  _initAuth();
-}
-
-void _initAuth() {
   serviceLocator.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
       supabaseClient: serviceLocator<SupabaseClient>(),
