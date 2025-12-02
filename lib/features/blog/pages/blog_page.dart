@@ -11,7 +11,7 @@ class BlogPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Blogg App'),
+        title: Text('Blog App'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -20,7 +20,7 @@ class BlogPage extends StatelessWidget {
               // AutoRoute's NamedRoute expects the route name, not the path string
               context.router.navigate(NamedRoute(AddNewBlog.route));
             },
-            icon: Icon(Icons.add_circle),
+            icon: Icon(Icons.add_circle_outline),
           ),
         ],
       ),

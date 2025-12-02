@@ -14,6 +14,9 @@ class BlogEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      decoration: InputDecoration(hintText: hintText),
+      maxLines: null,
+      keyboardType: TextInputType.text,
     );
   }
 }
