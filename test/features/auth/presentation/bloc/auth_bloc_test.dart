@@ -23,7 +23,6 @@ void main() {
   late MockCurrentUser mockCurrentUser;
   late MockUserSignUpImpl mockUserSignUpImpl;
   late MockUserLoginImpl mockUserLoginImpl;
-  late MockAppUserCubit mockAppUserCubit;
 
   setUpAll(() {
     registerFallbackValue(Params());
@@ -37,7 +36,6 @@ void main() {
     mockCurrentUser = MockCurrentUser();
     mockUserSignUpImpl = MockUserSignUpImpl();
     mockUserLoginImpl = MockUserLoginImpl();
-    mockAppUserCubit = MockAppUserCubit();
   });
 
   blocTest<AuthBloc, AuthState>(

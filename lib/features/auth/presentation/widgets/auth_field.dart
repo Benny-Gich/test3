@@ -10,6 +10,7 @@ class AuthField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final Function(String)? onFieldSubmitted;
 
+
   const AuthField({
     super.key,
     required this.controller,

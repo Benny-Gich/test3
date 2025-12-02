@@ -5,7 +5,7 @@ import 'package:test3/bootstrap.dart';
 import 'package:test3/core/common/cubit/app_user/app_user_cubit.dart';
 import 'package:test3/core/theme/theme.dart';
 import 'package:test3/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:test3/features/auth/presentation/pages/home_page.dart';
+import 'package:test3/features/blog/pages/blog_page.dart';
 import 'package:test3/features/auth/presentation/pages/login_page.dart';
 import 'package:test3/features/auth/di/init_dependencies.dart';
 import 'package:test3/router/app_router.dart';
@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
         BlocListener<AppUserCubit, AppUserState>(
           listener: (context, state) {
             if (state is AppUserLoggedIn) {
-              appRouter.replaceAll([NamedRoute(HomePage.route)]);
+              appRouter.replaceAll([NamedRoute(BlogPage.route)]);
             } else {
               appRouter.replaceAll([NamedRoute(LogInPage.route)]);
             }
