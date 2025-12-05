@@ -1,9 +1,10 @@
+// ignore_for_file: unnecessary_null_comparison
+import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:test3/core/theme/app_pallete.dart';
-import 'package:test3/features/auth/presentation/widgets/auth_field.dart';
 import 'package:test3/features/blog/widgets/blog_editor.dart';
+import '../../../core/utils/upload_image.dart';
 
 class AddNewBlog extends StatefulWidget {
   const AddNewBlog({super.key});
@@ -18,13 +19,16 @@ class _AddNewBlogState extends State<AddNewBlog> {
   final titleEditingController = TextEditingController();
   final contentEditingController = TextEditingController();
   List<String> selectedTopics = [];
+  File? image;
+
   // Initialize Upload
-  Future<void> uploadBlog() async {
-    final ImagePicker imagePicker = ImagePicker();
-    //Take A Photo
-    //final photo = await imagePicker.pickImage(source: ImageSource.camera);
-    //Attach photo from Gallery
-    final image = await imagePicker.pickImage(source: ImageSource.gallery);
+  void selectedImage() async {
+    final pickedImage = await uploadImage();
+    if (uploadImage != null) {
+      setState(() {
+        image = pickedImage;
+      });
+    }
   }
 
   @override
@@ -44,7 +48,6 @@ class _AddNewBlogState extends State<AddNewBlog> {
           },
           icon: Icon(Icons.arrow_back_ios),
         ),
-
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.done_all_rounded)),
         ],
@@ -54,37 +57,50 @@ class _AddNewBlogState extends State<AddNewBlog> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              DottedBorder(
-                options: RoundedRectDottedBorderOptions(
-                  color: AppPallete.borderColor,
-                  dashPattern: [10, 4],
-                  strokeCap: StrokeCap.round,
-                  radius: Radius.circular(10),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  height: 180,
-                  width: double.infinity,
-                  child: GestureDetector(
-                    onTap: () {
-                      uploadBlog();
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.folder_outlined,
-                          size: 64,
+              image != null
+                  ? GestureDetector(
+                      onTap: selectedImage,
+                      child: SizedBox(
+                        height: 150,
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: BorderRadiusGeometry.circular(12),
+                          child: Image.file(
+                            image!,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                        SizedBox(height: 16),
-                        Text('Select your Image'),
-                      ],
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: selectedImage,
+                      child: DottedBorder(
+                        options: RoundedRectDottedBorderOptions(
+                          color: AppPallete.borderColor,
+                          dashPattern: [10, 4],
+                          strokeCap: StrokeCap.round,
+                          radius: Radius.circular(10),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          height: 180,
+                          width: double.infinity,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.folder_outlined,
+                                size: 64,
+                              ),
+                              SizedBox(height: 16),
+                              Text('Select your Image'),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
               SizedBox(height: 16),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -107,9 +123,7 @@ class _AddNewBlogState extends State<AddNewBlog> {
                                   } else {
                                     selectedTopics.add(e);
                                   }
-                                  setState(() {
-                                    print(selectedTopics);
-                                  });
+                                  setState(() {});
                                 },
                                 child: Chip(
                                   label: Text(e),
