@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/bloc_observer/bloc_observer.dart';
-import 'features/auth/di/init_dependencies.dart';
+import 'di/init_dependencies.dart';
 
 /// Bootstrap the application with necessary initializations
 ///

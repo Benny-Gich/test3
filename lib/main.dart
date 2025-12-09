@@ -5,9 +5,10 @@ import 'package:test3/bootstrap.dart';
 import 'package:test3/core/common/cubit/app_user/app_user_cubit.dart';
 import 'package:test3/core/theme/theme.dart';
 import 'package:test3/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:test3/features/blog/pages/blog_page.dart';
+import 'package:test3/features/blog/presentation/bloc/blog_bloc.dart';
+import 'package:test3/features/blog/presentation/pages/blog_page.dart';
 import 'package:test3/features/auth/presentation/pages/login_page.dart';
-import 'package:test3/features/auth/di/init_dependencies.dart';
+import 'package:test3/di/init_dependencies.dart';
 import 'package:test3/router/app_router.dart';
 
 void main() async {
@@ -23,6 +24,7 @@ class RootAppWidget extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => serviceLocator<AppUserCubit>()),
         BlocProvider(create: (_) => serviceLocator<AuthBloc>()),
+        BlocProvider(create: (_) => serviceLocator<BlogBloc>()),
       ],
 
       child: const MyApp(),

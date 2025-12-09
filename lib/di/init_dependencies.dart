@@ -10,6 +10,10 @@ import 'package:test3/features/auth/domain/usecase/current_user.dart';
 import 'package:test3/features/auth/domain/usecase/user_login_impl.dart';
 import 'package:test3/features/auth/domain/usecase/user_signup_impl.dart';
 import 'package:test3/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:test3/features/blog/data/datasources/blog_remote_data_source_impl.dart';
+import 'package:test3/features/blog/data/repositories/blog_repository_impl.dart';
+import 'package:test3/features/blog/domain/usecase/upload_blog.dart';
+import 'package:test3/features/blog/presentation/bloc/blog_bloc.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -51,5 +55,17 @@ Future<void> initDependencies() async {
       userLoginImpl: serviceLocator<UserLoginImpl>(),
       currentUser: serviceLocator<CurrentUser>(),
     ),
+  );
+  serviceLocator.registerLazySingleton(
+    () => BlogRemoteDataSourceImpl(serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton(
+    () => BlogRepositoryImpl(serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton(
+    () => UploadBlog(serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton(
+    () => BlogBloc(serviceLocator()),
   );
 }

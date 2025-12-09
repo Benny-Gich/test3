@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:test3/features/blog/pages/home_page.dart';
+import 'package:test3/features/blog/presentation/pages/home_page.dart';
 import 'package:test3/features/auth/presentation/pages/login_page.dart';
 import 'package:test3/features/auth/presentation/pages/signup_page.dart';
 import 'package:test3/features/auth/presentation/pages/splash_page.dart';
-import 'package:test3/features/blog/pages/add_new_blog.dart';
-import 'package:test3/features/blog/pages/blog_page.dart';
+import 'package:test3/features/blog/presentation/pages/add_new_blog.dart';
+import 'package:test3/features/blog/presentation/pages/blog_page.dart';
 
 class AppRouter extends RootStackRouter {
   AppRouter({super.navigatorKey});
