@@ -26,9 +26,12 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
   @override
   Future<String> uploadBlogImage({
     required File image,
-    required BlogModel blog,
+    BlogModel? blog,
   }) async {
     try {
+      if (blog == null) {
+        throw ServerException('Blog model is required for image upload');
+      }
       await supabaseClient.storage.from('blog_images').upload(blog.id, image);
       return supabaseClient.storage.from('blog_images').getPublicUrl(blog.id);
     } catch (e) {
