@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test3/core/utils/calculate_reading_time.dart';
 import 'package:test3/features/blog/domain/entities/blog.dart';
 
 class BlogCard extends StatelessWidget {
@@ -19,24 +20,37 @@ class BlogCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: blogs.topics
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Chip(
-                        label: Text(e),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: blogs.topics
+                      .map(
+                        (e) => Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Chip(
+                            label: Text(e),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+              Text(
+                blogs.title,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              ),
+            ],
           ),
-          Text(blogs.title),
+
+          SizedBox(height: 50),
+          Text('${calculateReadingTime(blogs.content)} min'),
         ],
       ),
     );
