@@ -1,5 +1,8 @@
+// ignore_for_file: unused_import
+
 import 'dart:io';
 import 'package:dartz/dartz.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test3/core/error/exception.dart';
 import 'package:test3/core/error/failure.dart';
 import 'package:test3/features/blog/data/datasources/blog_remote_data_source.dart';
@@ -10,6 +13,7 @@ import 'package:uuid/uuid.dart';
 
 class BlogRepositoryImpl implements BlogRepository {
   final BlogRemoteDataSource blogRemoteDataSource;
+
   BlogRepositoryImpl(this.blogRemoteDataSource);
 
   @override
@@ -42,6 +46,16 @@ class BlogRepositoryImpl implements BlogRepository {
       return Right(uploadedBlog);
     } on ServerException catch (e) {
       return Left(Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Blog>>> getAllBlogs() async {
+    try {
+      final blogs = await blogRemoteDataSource.getAllBlogs();
+      return right(blogs);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
     }
   }
 }

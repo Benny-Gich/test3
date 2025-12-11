@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-
 class Blog {
   final String id;
   final DateTime updatedAt;
   final String posterId;
   final String title;
+  final String? posterName;
   final String content;
   final String imageUrl;
   final List<String> topics;
@@ -18,7 +18,6 @@ class Blog {
     required this.content,
     required this.imageUrl,
     required this.topics,
+    this.posterName,
   });
-
-  
 }

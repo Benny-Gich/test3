@@ -14,6 +14,7 @@ import 'package:test3/features/blog/data/datasources/blog_remote_data_source.dar
 import 'package:test3/features/blog/data/datasources/blog_remote_data_source_impl.dart';
 import 'package:test3/features/blog/data/repositories/blog_repository_impl.dart';
 import 'package:test3/features/blog/domain/repositories/blog_repository.dart';
+import 'package:test3/features/blog/domain/usecase/get_all_blogs.dart';
 import 'package:test3/features/blog/domain/usecase/upload_blog.dart';
 import 'package:test3/features/blog/presentation/bloc/blog_bloc.dart';
 
@@ -67,7 +68,13 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton<UploadBlog>(
     () => UploadBlog(serviceLocator()),
   );
+  serviceLocator.registerFactory<GetAllBlogs>(
+    () => GetAllBlogs(serviceLocator()),
+  );
   serviceLocator.registerLazySingleton<BlogBloc>(
-    () => BlogBloc(serviceLocator()),
+    () => BlogBloc(
+      uploadBlog: serviceLocator(),
+      getAllBlogs: serviceLocator(),
+    ),
   );
 }

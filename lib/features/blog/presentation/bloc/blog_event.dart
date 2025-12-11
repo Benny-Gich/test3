@@ -7,6 +7,10 @@ sealed class BlogEvent extends Equatable {
   List<Object> get props => [];
 }
 
+final class BlogGetAllBlogs extends BlogEvent{
+  
+}
+
 final class BlogUpload extends BlogEvent {
   final String posterId;
   final String title;
