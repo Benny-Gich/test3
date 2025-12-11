@@ -13,34 +13,37 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final UserSignUpImpl _userSignUpImpl;
+  final UserLoginImpl _userLoginImpl;
+  final CurrentUser _currentUser;
+  
   AuthBloc({
     required CurrentUser currentUser,
     required UserSignUpImpl userSignUpImpl,
     required UserLoginImpl userLoginImpl,
-   // required AppUserCubit appUserCubit,
+    // required AppUserCubit appUserCubit,
   }) : _userSignUpImpl = userSignUpImpl,
        _userLoginImpl = userLoginImpl,
        _currentUser = currentUser,
-      // _appUserCubit = appUserCubit,
+       // _appUserCubit = appUserCubit,
        super(AuthInitial()) {
-    on<AuthEvent>((_, emit) => emit(AuthLoading()));
+    //on<AuthEvent>((_, emit) => emit(AuthLoading()));
     on<AuthSignUp>(_onAuthSignUp);
     on<AuthLogIn>(_onAuthLogIn);
     on<AuthIsUserLoggedIn>(_onAuthIsUserLoggedIn);
   }
-  final UserSignUpImpl _userSignUpImpl;
-  final UserLoginImpl _userLoginImpl;
-  final CurrentUser _currentUser;
- // final AppUserCubit _appUserCubit;
+
+  // final AppUserCubit _appUserCubit;
 
   FutureOr<void> _onAuthIsUserLoggedIn(
     AuthIsUserLoggedIn event,
     Emitter<AuthState> emit,
   ) async {
-    final res = await _currentUser(Params());
+    emit(AuthLoading());
+    final res = await _currentUser.call(Params());
 
     res.fold(
-      (failure) => emit(AuthFailure(failure.message)),
+      (failure) => emit(AuthLoggedOut(failure.message)),
       (profile) => _emitAuthSuccess(profile, emit),
     );
   }
@@ -49,7 +52,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignUp event,
     Emitter<AuthState> emit,
   ) async {
-    final res = await _userSignUpImpl(
+    emit(AuthLoading());
+    final res = await _userSignUpImpl.call(
       UserSignUpParams(
         name: event.name,
         email: event.email,
@@ -63,6 +67,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   FutureOr<void> _onAuthLogIn(AuthLogIn event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
     final res = await _userLoginImpl(
       UserLoginParams(email: event.email, password: event.passWord),
     );

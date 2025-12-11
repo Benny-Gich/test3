@@ -11,20 +11,30 @@ part 'blog_state.dart';
 
 class BlogBloc extends Bloc<BlogEvent, BlogState> {
   final UploadBlog uploadBlog;
-  BlogBloc(this.uploadBlog) : super(BlogInitial()) {
-    on<BlogEvent>((event, emit) => BlogLoading());
-    on<BlogUpload>((even, emit) => _onBlogUpload);
+
+  BlogBloc(
+    this.uploadBlog,
+  ) : super(BlogInitial()) {
+    on<BlogUpload>(_onBlogUpload);
   }
   void _onBlogUpload(BlogUpload event, Emitter<BlogState> emit) async {
-    final res = await uploadBlog(
-      UploadBlogParams(
-        posterId: event.posterId,
-        title: event.title,
-        content: event.content,
-        image: event.image,
-        topics: event.topics,
-      ),
-    );
-    res.fold((l) => emit(BlogFailure(l.message)), (r) => emit(BlogSuccess()));
+    emit(BlogLoading());
+    try {
+      final res = await uploadBlog(
+        UploadBlogParams(
+          posterId: event.posterId,
+          title: event.title,
+          content: event.content,
+          image: event.image,
+          topics: event.topics,
+        ),
+      );
+      res.fold(
+        (l) => emit(BlogFailure(l.message)),
+        (r) => emit(BlogSuccess()),
+      );
+    } catch (e) {
+      emit(BlogFailure('Unexpected error: ${e.toString()}'));
+    }
   }
 }

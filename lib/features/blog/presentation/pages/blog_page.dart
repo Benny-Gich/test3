@@ -5,7 +5,7 @@ import 'package:test3/features/blog/presentation/pages/add_new_blog.dart';
 class BlogPage extends StatelessWidget {
   const BlogPage({super.key});
   static String route = 'BlogPage';
-  static String path = '/';
+  static String path = '/blog';
 
   @override
   Widget build(BuildContext context) {

@@ -36,7 +36,7 @@ class BlogModel extends Blog {
       content: map['content'] as String,
       imageUrl: map['image_url'] as String,
       topics: List<String>.from(
-        (map['topics'] as List<String>),
+        (map['topics'] as List<dynamic>).map((e) => e as String),
       ),
     );
   }

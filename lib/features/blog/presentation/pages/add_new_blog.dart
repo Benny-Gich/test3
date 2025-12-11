@@ -5,6 +5,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test3/core/common/cubit/app_user/app_user_cubit.dart';
+import 'package:test3/core/common/widgets/utils/loader.dart';
 import 'package:test3/core/common/widgets/utils/show_snackbar.dart';
 import 'package:test3/core/theme/app_pallete.dart';
 import 'package:test3/features/blog/presentation/bloc/blog_bloc.dart';
@@ -39,21 +40,35 @@ class _AddNewBlogState extends State<AddNewBlog> {
   }
 
   void uploadBlog() {
-    if (formKey.currentState!.validate() &&
-        selectedTopics.isNotEmpty &&
-        image != null) {
-      final posterId =
-          (context.read<AppUserCubit>().state as AppUserLoggedIn).profile.id;
-      context.read<BlogBloc>().add(
-        BlogUpload(
-          posterId: posterId,
-          title: titleEditingController.text.trim(),
-          content: contentEditingController.text.trim(),
-          image: image!,
-          topics: selectedTopics,
-        ),
-      );
+    if (!(formKey.currentState?.validate() ?? false)) {
+      showSnackBar(context, 'Please fix the form errors');
+      return;
     }
+    if (selectedTopics.isEmpty) {
+      showSnackBar(context, 'Please choose at least one topic.');
+      return;
+    }
+    if (image == null) {
+      showSnackBar(context, 'Please select an image for the post.');
+      return;
+    }
+    final appUserState = context.read<AppUserCubit>().state;
+    if (appUserState is! AppUserLoggedIn) {
+      showSnackBar(context, 'You must be logged in to upload a blog.');
+      return;
+    }
+
+    final posterId = appUserState.profile.id;
+
+    context.read<BlogBloc>().add(
+      BlogUpload(
+        posterId: posterId,
+        title: titleEditingController.text.trim(),
+        content: contentEditingController.text.trim(),
+        image: image!,
+        topics: selectedTopics,
+      ),
+    );
   }
 
   @override
@@ -87,10 +102,17 @@ class _AddNewBlogState extends State<AddNewBlog> {
           if (state is BlogFailure) {
             showSnackBar(context, state.error);
           } else if (state is BlogSuccess) {
-            context.router.navigate(NamedRoute(BlogPage.route));
+            context.router.replaceAll(
+              [
+                NamedRoute(BlogPage.route),
+              ],
+            );
           }
         },
         builder: (context, state) {
+          if (state is BlogLoading) {
+            return Loader();
+          }
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -105,7 +127,7 @@ class _AddNewBlogState extends State<AddNewBlog> {
                               height: 150,
                               width: double.infinity,
                               child: ClipRRect(
-                                borderRadius: BorderRadiusGeometry.circular(12),
+                                borderRadius: BorderRadius.circular(12),
                                 child: Image.file(
                                   image!,
                                   fit: BoxFit.cover,

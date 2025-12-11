@@ -53,7 +53,11 @@ class _MyAppState extends State<MyApp> {
     // access inherited widgets (BlocProvider). Calling `context.read` in
     // `initState` can fail because the element tree isn't fully built yet.
 
-    context.read<AuthBloc>().add(const AuthIsUserLoggedIn());
+    Future.delayed(Duration(seconds: 3), () {
+      if (mounted) {
+        context.read<AuthBloc>().add(const AuthIsUserLoggedIn());
+      }
+    });
   }
 
   @override
@@ -71,14 +75,8 @@ class _MyAppState extends State<MyApp> {
           listener: (context, state) {
             if (state is AuthSuccess) {
               context.read<AppUserCubit>().updateProfile(state.profile);
-            }
-          },
-        ),
-        BlocListener<AppUserCubit, AppUserState>(
-          listener: (context, state) {
-            if (state is AppUserLoggedIn) {
               appRouter.replaceAll([NamedRoute(BlogPage.route)]);
-            } else {
+            } else if (state is AuthLoggedOut) {
               appRouter.replaceAll([NamedRoute(LogInPage.route)]);
             }
           },

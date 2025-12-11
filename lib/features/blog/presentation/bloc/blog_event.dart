@@ -13,6 +13,14 @@ final class BlogUpload extends BlogEvent {
   final String content;
   final File image;
   final List<String> topics;
+  @override
+  List<Object> get props => [
+    posterId,
+    title,
+    content,
+    image,
+    topics,
+  ];
 
   const BlogUpload({
     required this.posterId,

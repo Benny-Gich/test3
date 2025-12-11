@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:developer' as developer;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test3/features/blog/data/datasources/blog_remote_data_source.dart';
 import '../../../../core/error/exception.dart';
@@ -18,7 +19,8 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
           )
           .select();
       return BlogModel.fromJson(blogData.first);
-    } catch (e) {
+    } catch (e, s) {
+      developer.log('uploadBlogError', error: e, stackTrace: s);
       throw ServerException(e.toString());
     }
   }
@@ -30,11 +32,13 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
   }) async {
     try {
       if (blog == null) {
+        developer.log('Blog is null');
         throw ServerException('Blog model is required for image upload');
       }
       await supabaseClient.storage.from('blog_images').upload(blog.id, image);
       return supabaseClient.storage.from('blog_images').getPublicUrl(blog.id);
-    } catch (e) {
+    } catch (e, s) {
+      developer.log('uploadBlogImage', error: e, stackTrace: s);
       throw ServerException(e.toString());
     }
   }
