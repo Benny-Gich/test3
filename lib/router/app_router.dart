@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:test3/features/blog/presentation/pages/blog_page_viewer.dart';
 import 'package:test3/features/blog/presentation/pages/home_page.dart';
 import 'package:test3/features/auth/presentation/pages/login_page.dart';
 import 'package:test3/features/auth/presentation/pages/signup_page.dart';
@@ -40,6 +42,26 @@ class AppRouter extends RootStackRouter {
       name: BlogPage.route,
       builder: (context, data) => BlogPage(),
       path: BlogPage.path,
+    ),
+    NamedRouteDef(
+      name: BlogPageViewer.route,
+      path: BlogPageViewer.path,
+      builder: (context, data) {
+        final args = data.argsAs<BlogPageViewerArgs?>(
+          orElse: () => null,
+        );
+        if (args == null) {
+          //return an error Screen saying arguments is null
+          return Scaffold(
+            body: Center(
+              child: Text('Arguments is null'),
+            ),
+          );
+        }
+        return BlogPageViewer(
+          blog: args.blog,
+        );
+      },
     ),
   ];
 }
