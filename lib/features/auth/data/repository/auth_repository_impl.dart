@@ -8,6 +8,7 @@ import 'package:test3/features/auth/domain/repository/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDatasource;
+  
   AuthRepositoryImpl(this.remoteDatasource);
 
   @override

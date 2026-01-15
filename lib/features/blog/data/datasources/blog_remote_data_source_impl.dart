@@ -12,13 +12,21 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
   @override
   Future<BlogModel> uploadBlog(BlogModel blog) async {
     try {
+      final user = supabaseClient.auth.currentUser;
+      if (user == null) {
+        throw ServerException('No User');
+      }
+
       final blogData = await supabaseClient
           .from('blogs')
           .insert(
             blog.toJson(),
           )
-          .select();
-      return BlogModel.fromJson(blogData.first);
+          .select('*, profiles (name)');
+      final firstData = blogData.first;
+      return BlogModel.fromJson(
+        firstData,
+      ).copyWith(posterName: firstData['profiles']['name']);
     } catch (e, s) {
       developer.log('uploadBlogError', error: e, stackTrace: s);
       throw ServerException(e.toString());

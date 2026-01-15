@@ -5,12 +5,12 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test3/core/common/cubit/app_user/app_user_cubit.dart';
-import 'package:test3/core/common/widgets/utils/loader.dart';
 import 'package:test3/core/common/widgets/utils/show_snackbar.dart';
 import 'package:test3/core/theme/app_pallete.dart';
 import 'package:test3/features/blog/presentation/bloc/blog_bloc.dart';
 import 'package:test3/features/blog/presentation/pages/blog_page.dart';
 import 'package:test3/features/blog/presentation/widgets/blog_editor.dart';
+import 'package:uuid/uuid.dart';
 import '../../../../core/utils/upload_image.dart';
 
 class AddNewBlog extends StatefulWidget {
@@ -62,6 +62,7 @@ class _AddNewBlogState extends State<AddNewBlog> {
 
     context.read<BlogBloc>().add(
       BlogUpload(
+        blogId: Uuid().v1(),
         posterId: posterId,
         title: titleEditingController.text.trim(),
         content: contentEditingController.text.trim(),
@@ -98,21 +99,22 @@ class _AddNewBlogState extends State<AddNewBlog> {
         ],
       ),
       body: BlocConsumer<BlogBloc, BlogState>(
+        listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
-          if (state is BlogFailure) {
+          if (state.status == BlogStatus.failure) {
             showSnackBar(context, state.error);
-          } else if (state is BlogUploadSuccess) {
-            context.router.replaceAll(
-              [
-                NamedRoute(BlogPage.route),
-              ],
-            );
+          } else if (state.status == BlogStatus.success) {
+            context.navigateTo(NamedRoute(BlogPage.route));
+            // refresh blogs in the bloc so the blog page shows the newly uploaded post
+            // context.read<BlogBloc>().add(BlogGetAllBlogs());
+            // context.router.replaceAll(
+            //   [
+            //     NamedRoute(BlogPage.route),
+            //   ],
+            // );
           }
         },
         builder: (context, state) {
-          if (state is BlogLoading) {
-            return Loader();
-          }
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),

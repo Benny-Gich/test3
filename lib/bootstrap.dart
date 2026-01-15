@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'package:flutter/foundation.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/bloc_observer/bloc_observer.dart';
 import 'di/init_dependencies.dart';
@@ -19,6 +20,13 @@ FutureOr<void> bootstrap(FutureOr<Widget> Function() builder) async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       Bloc.observer = AppBlocObserver();
+      final dir = await getApplicationDocumentsDirectory();
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: kIsWeb
+            ? HydratedStorageDirectory.web
+            : HydratedStorageDirectory(dir.path),
+      );
+
       await initDependencies();
 
       // Run the app

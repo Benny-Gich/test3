@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,12 +60,14 @@ class _MyAppState extends State<MyApp> {
       }
     });
   }
-
+  
   @override
   void dispose() {
     appRouter.dispose();
     super.dispose();
+    
   }
+  
 
   // This widget is the root of your application.
   @override

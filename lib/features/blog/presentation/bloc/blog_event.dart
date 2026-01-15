@@ -7,9 +7,7 @@ sealed class BlogEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class BlogGetAllBlogs extends BlogEvent{
-  
-}
+final class BlogGetAllBlogs extends BlogEvent {}
 
 final class BlogUpload extends BlogEvent {
   final String posterId;
@@ -17,6 +15,8 @@ final class BlogUpload extends BlogEvent {
   final String content;
   final File image;
   final List<String> topics;
+  final String blogId;
+
   @override
   List<Object> get props => [
     posterId,
@@ -24,6 +24,7 @@ final class BlogUpload extends BlogEvent {
     content,
     image,
     topics,
+    blogId,
   ];
 
   const BlogUpload({
@@ -32,5 +33,18 @@ final class BlogUpload extends BlogEvent {
     required this.content,
     required this.image,
     required this.topics,
+    required this.blogId,
   });
+}
+
+final class SyncUploads extends BlogEvent {
+  const SyncUploads();
+}
+
+final class _SingleUploadEvent extends BlogEvent {
+  final Blog blog;
+  const _SingleUploadEvent(this.blog);
+
+  @override
+  List<Object> get props => [blog];
 }

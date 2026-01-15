@@ -1,9 +1,16 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:test3/features/blog/domain/entities/blog.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'blog_model.g.dart';
+
+@JsonSerializable(
+  fieldRename: FieldRename.snake,
+  explicitToJson: true,
+)
 class BlogModel extends Blog {
-  BlogModel({
+  const BlogModel({
     required super.id,
     required super.updatedAt,
     required super.posterId,
@@ -13,34 +20,14 @@ class BlogModel extends Blog {
     required super.topics,
     super.posterName,
   });
+  
 
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'id': id,
-      'updated_at': updatedAt.toIso8601String(),
-      'poster_id': posterId,
-      'title': title,
-      'content': content,
-      'image_url': imageUrl,
-      'topics': topics,
-    };
-  }
+  factory BlogModel.fromJson(Map<String, dynamic> json) =>
+      _$BlogModelFromJson(json);
 
-  factory BlogModel.fromJson(Map<String, dynamic> map) {
-    return BlogModel(
-      id: map['id'] as String,
-      updatedAt: map['updated_at'] == null
-          ? DateTime.now()
-          : DateTime.parse(map['updated_at']),
-      posterId: map['poster_id'] as String,
-      title: map['title'] as String,
-      content: map['content'] as String,
-      imageUrl: map['image_url'] as String,
-      topics: List<String>.from(
-        (map['topics'] as List<dynamic>).map((e) => e as String),
-      ),
-    );
-  }
+  @override
+  Map<String, dynamic> toJson() => _$BlogModelToJson(this);
+
   BlogModel copyWith({
     String? id,
     DateTime? updatedAt,
@@ -59,7 +46,9 @@ class BlogModel extends Blog {
       content: content ?? this.content,
       imageUrl: imageUrl ?? this.imageUrl,
       topics: topics ?? this.topics,
-      posterName: this.posterName,
+      posterName: posterName ?? this.posterName,
     );
   }
 }
+
+
