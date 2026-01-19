@@ -11,7 +11,7 @@ BlogModel _$BlogModelFromJson(Map<String, dynamic> json) => BlogModel(
   updatedAt: json['updated_at'] == null
       ? null
       : DateTime.parse(json['updated_at'] as String),
-  posterId: json['poster_id'] as String,
+  posterId: json['poster_id'] as String?,
   title: json['title'] as String,
   content: json['content'] as String,
   imageUrl: json['image_url'] as String,

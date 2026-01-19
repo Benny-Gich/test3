@@ -27,7 +27,7 @@ class BlogPageViewer extends StatelessWidget {
           icon: Icon(Icons.arrow_back_ios),
         ),
         title: Text(
-          blog.title,
+          blog.title??'',
           overflow: TextOverflow.fade,
           maxLines: 1,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
@@ -48,7 +48,7 @@ class BlogPageViewer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  blog.title,
+                  blog.title??'',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 20),
@@ -67,9 +67,11 @@ class BlogPageViewer extends StatelessWidget {
                   endIndent: 40,
                 ),
                 SizedBox(height: 20),
+                if(blog.imageUrl!=null)
                 ClipRRect(
                   borderRadius: BorderRadiusGeometry.circular(10),
-                  child: Image.network(blog.imageUrl),
+                  child: 
+                  Image.network(blog.imageUrl!),
                 ),
                 SizedBox(height: 20),
                 Divider(
@@ -79,7 +81,7 @@ class BlogPageViewer extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  blog.content,
+                  blog.content??'',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,

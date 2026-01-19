@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:kt_dart/kt.dart';
 import 'package:test3/core/usecase/usecase.dart';
 import 'package:test3/features/blog/domain/entities/blog.dart';
@@ -16,6 +17,7 @@ part 'blog_bloc.g.dart';
 part 'blog_event.dart';
 part 'blog_state.dart';
 
+@LazySingleton()
 class BlogBloc extends HydratedBloc<BlogEvent, BlogState> {
   final UploadBlog uploadBlog;
   final GetAllBlogs getAllBlogs;
@@ -131,8 +133,8 @@ class BlogBloc extends HydratedBloc<BlogEvent, BlogState> {
       UploadBlogParams(
         blogId: blog.id,
         posterId: blog.posterId ?? '',
-        title: blog.title,
-        content: blog.content,
+        title: blog.title??'',
+        content: blog.content??'',
         image: blog.offlineImagePath?.let((path) => File(path)),
         topics: blog.topics,
       ),

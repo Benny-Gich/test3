@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 import 'package:test3/core/error/failure.dart';
 import 'package:test3/core/usecase/usecase.dart';
 import 'package:test3/features/blog/domain/entities/blog.dart';
 import 'package:test3/features/blog/domain/repositories/blog_repository.dart';
 
+@LazySingleton()
 class UploadBlog implements UseCase<Blog, UploadBlogParams> {
   final BlogRepository blogRepository;
   UploadBlog(this.blogRepository);

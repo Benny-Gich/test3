@@ -1,15 +1,15 @@
-part of 'app_user_cubit.dart';
+part of 'app_user_bloc.dart';
 
-sealed class AppUserState extends Equatable {
-  const AppUserState();
+class AppUserState extends Equatable {
+  const AppUserState({
+    this.status = AuthStatus.initial,
+    this.profile,
+  });
+  final AuthStatus status;
+  final Profile? profile;
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [status, profile];
 }
 
-final class AppUserInitial extends AppUserState {}
-
-final class AppUserLoggedIn extends AppUserState {
-  final Profile profile;
-  const AppUserLoggedIn(this.profile);
-}
+enum AuthStatus { initial, loading, login, logout }

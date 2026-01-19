@@ -6,10 +6,10 @@ class Blog extends Equatable {
   final String id;
   final DateTime? updatedAt;
   final String? posterId;
-  final String title;
+  final String? title;
   final String? posterName;
-  final String content;
-  final String imageUrl;
+  final String? content;
+  final String? imageUrl;
   final List<String> topics;
 
   ///Offline fields
@@ -23,7 +23,7 @@ class Blog extends Equatable {
     required this.title,
     required this.content,
     required this.imageUrl,
-    required this.topics,
+    this.topics = const [],
     this.posterName,
     this.offlineId,
     this.offlineImagePath,
@@ -32,32 +32,36 @@ class Blog extends Equatable {
   factory Blog.fromJson(Map<String, dynamic> json) {
     return Blog(
       id: json['id'] as String,
-      updatedAt: (json['updatedAt'] as String?) != null
+      updatedAt: json['updatedAt'] != null
           ? DateTime.tryParse(json['updatedAt'] as String)
           : null,
       posterId: json['posterId'] as String?,
-      title: json['title'] as String,
-      content: json['content'] as String,
-      imageUrl: json['imageUrl'] as String,
-      topics: List<String>.from(json['topics'] as List),
+      title: json['title'] as String?,
+      content: json['content'] as String?,
+      imageUrl: json['imageUrl'] as String?,
+      topics: json['topics'] != null
+          ? List<String>.from(json['topics'] as List)
+          : const [],
       posterName: json['posterName'] as String?,
       offlineId: json['offlineId'] as String?,
       offlineImagePath: json['offlineImagePath'] as String?,
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'updatedAt': updatedAt?.toIso8601String(),
-    'posterId': posterId,
-    'title': title,
-    'content': content,
-    'imageUrl': imageUrl,
-    'topics': topics,
-    'posterName': posterName,
-    'offlineId': offlineId,
-    'offlineImagePath': offlineImagePath,
-  };
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'id': id,
+      'updatedAt': updatedAt?.toIso8601String(),
+      'posterId': posterId,
+      'title': title,
+      'content': content,
+      'imageUrl': imageUrl,
+      'topics': topics,
+      'posterName': posterName,
+      'offlineId': offlineId,
+      'offlineImagePath': offlineImagePath,
+    };
+  }
 
   @override
   List<Object?> get props => [

@@ -3,7 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test3/bootstrap.dart';
-import 'package:test3/core/common/cubit/app_user/app_user_cubit.dart';
+import 'package:test3/core/common/cubit/app_user/app_user_bloc.dart';
 import 'package:test3/core/theme/theme.dart';
 import 'package:test3/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:test3/features/blog/presentation/bloc/blog_bloc.dart';
@@ -23,7 +23,7 @@ class RootAppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => serviceLocator<AppUserCubit>()),
+        BlocProvider(create: (_) => serviceLocator<AppUserBloc>()),
         BlocProvider(create: (_) => serviceLocator<AuthBloc>()),
         BlocProvider(create: (_) => serviceLocator<BlogBloc>()),
       ],
@@ -56,31 +56,32 @@ class _MyAppState extends State<MyApp> {
 
     Future.delayed(Duration(seconds: 3), () {
       if (mounted) {
-        context.read<AuthBloc>().add(const AuthIsUserLoggedIn());
+        // context.read<AuthBloc>().add(const AuthIsUserLoggedIn());
+        context.read<AppUserBloc>().add(GetUserEvent());
       }
     });
   }
-  
+
   @override
   void dispose() {
     appRouter.dispose();
     super.dispose();
-    
   }
-  
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<AuthBloc, AuthState>(
+        BlocListener<AppUserBloc, AppUserState>(
           listener: (context, state) {
-            if (state is AuthSuccess) {
-              context.read<AppUserCubit>().updateProfile(state.profile);
-              appRouter.replaceAll([NamedRoute(BlogPage.route)]);
-            } else if (state is AuthLoggedOut) {
-              appRouter.replaceAll([NamedRoute(LogInPage.route)]);
+            switch (state.status) {
+              case AuthStatus.login:
+                appRouter.replaceAll([NamedRoute(BlogPage.route)]);
+              case AuthStatus.logout:
+                appRouter.replaceAll([NamedRoute(LogInPage.route)]);
+              default:
+                break;
             }
           },
         ),

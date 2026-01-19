@@ -56,7 +56,7 @@ class BlogCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  blogs.title,
+                  blogs.title??'',
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 22,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:test3/core/usecase/usecase.dart';
 import 'package:test3/core/entities/profile.dart';
 import 'package:test3/features/auth/domain/usecase/current_user.dart';
@@ -12,6 +13,7 @@ import 'package:test3/features/auth/domain/usecase/user_signup_impl.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 
+@LazySingleton()
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserSignUpImpl _userSignUpImpl;
   final UserLoginImpl _userLoginImpl;
@@ -30,23 +32,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     //on<AuthEvent>((_, emit) => emit(AuthLoading()));
     on<AuthSignUp>(_onAuthSignUp);
     on<AuthLogIn>(_onAuthLogIn);
-    on<AuthIsUserLoggedIn>(_onAuthIsUserLoggedIn);
+    // on<AuthIsUserLoggedIn>(_onAuthIsUserLoggedIn);
   }
 
   // final AppUserCubit _appUserCubit;
 
-  FutureOr<void> _onAuthIsUserLoggedIn(
-    AuthIsUserLoggedIn event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthLoading());
-    final res = await _currentUser.call(Params());
+  // FutureOr<void> _onAuthIsUserLoggedIn(
+  //   AuthIsUserLoggedIn event,
+  //   Emitter<AuthState> emit,
+  // ) async {
+  //   emit(AuthLoading());
+  //   final res = await _currentUser.call(Params());
 
-    res.fold(
-      (failure) => emit(AuthLoggedOut(failure.message)),
-      (profile) => _emitAuthSuccess(profile, emit),
-    );
-  }
+  //   res.fold(
+  //     (failure) => emit(AuthLoggedOut(failure.message)),
+  //     (profile) => _emitAuthSuccess(profile, emit),
+  //   );
+  // }
 
   FutureOr<void> _onAuthSignUp(
     AuthSignUp event,

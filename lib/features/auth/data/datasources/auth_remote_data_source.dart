@@ -1,8 +1,8 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:test3/features/auth/data/models/auth_model.dart';
 import 'package:test3/features/auth/data/models/profile_model.dart';
 
 abstract interface class AuthRemoteDataSource {
-  
   Session? get currentUserSession;
   Future<ProfileModel> signUpwithEmailPassWord({
     required String name,
@@ -14,4 +14,8 @@ abstract interface class AuthRemoteDataSource {
     required String passWord,
   });
   Future<ProfileModel?> getCurrentUserData();
+
+  Stream<AuthModel> watchCurrentUser();
+
+  Future<void> logout();
 }

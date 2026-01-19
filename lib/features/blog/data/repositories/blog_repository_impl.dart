@@ -1,22 +1,19 @@
 import 'dart:io';
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 import 'package:test3/core/error/exception.dart';
 import 'package:test3/core/error/failure.dart';
-import 'package:test3/core/network/connection_checker.dart';
 import 'package:test3/features/blog/data/datasources/blog_remote_data_source.dart';
 import 'package:test3/features/blog/data/models/blog_model.dart';
 import 'package:test3/features/blog/domain/entities/blog.dart';
 import 'package:test3/features/blog/domain/repositories/blog_repository.dart';
 
+@LazySingleton(as: BlogRepository)
 class BlogRepositoryImpl implements BlogRepository {
   final BlogRemoteDataSource blogRemoteDataSource;
 
-  InternetStatus internetStatus;
-
   BlogRepositoryImpl(
     this.blogRemoteDataSource,
-
-    this.internetStatus,
   );
 
   @override
@@ -29,9 +26,9 @@ class BlogRepositoryImpl implements BlogRepository {
     required String blogId,
   }) async {
     try {
-      if (internetStatus != InternetStatus.connected) {
-        return left(Failure('No internet Connection!'));
-      }
+      // if (internetStatus != InternetStatus.connected) {
+      //   return left(Failure('No internet Connection!'));
+      // }
       BlogModel blogModel = BlogModel(
         id: blogId,
         updatedAt: DateTime.now(),

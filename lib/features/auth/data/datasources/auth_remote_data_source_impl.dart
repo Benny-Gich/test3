@@ -1,13 +1,19 @@
+import 'dart:developer';
+
+import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:test3/core/error/exception.dart';
 import 'package:test3/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:test3/features/auth/data/models/auth_model.dart';
 import 'package:test3/features/auth/data/models/profile_model.dart';
 
+@LazySingleton(as: AuthRemoteDataSource)
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-  final SupabaseClient supabaseClient;
-  AuthRemoteDataSourceImpl({required this.supabaseClient});
+  final Supabase supabase;
+  AuthRemoteDataSourceImpl({required this.supabase});
 
+  SupabaseClient get supabaseClient => supabase.client;
   @override
   Session? get currentUserSession => supabaseClient.auth.currentSession;
 
@@ -23,7 +29,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         return ProfileModel.fromJson(profileData.first);
       }
     } catch (e) {
-      throw ServerException(e.toString());
+      // throw ServerException(e.toString());
+      return null;
     }
     return null;
   }
@@ -73,5 +80,47 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } catch (e) {
       throw ServerException(e.toString());
     }
+  }
+
+  @override
+  Stream<AuthModel> watchCurrentUser() async* {
+    final initialUser = supabaseClient.auth.currentUser;
+    if (initialUser == null) {
+      yield AuthModel(status: AuthChangeEvent.signedOut);
+    }
+    yield* supabase.client.auth.onAuthStateChange.map((state)  {
+      final event = state.event;
+      final session = state.session;
+      if (session?.user == null) {
+        return AuthModel(status: event);
+      }
+      log('STATUS $event');
+      // final profile = await _getProfileData(session?.user.id);
+      return AuthModel(status: event, profile: null);
+    }).distinct();
+  }
+
+  Future<ProfileModel?> _getProfileData(String? userId) async {
+    try {
+      if (userId == null) {
+        return null;
+      }
+      final profileData = await supabaseClient
+          .from('profiles')
+          .select()
+          .eq('id', userId)
+          .maybeSingle();
+      if (profileData != null) {
+        return ProfileModel.fromJson(profileData);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<void> logout() {
+    return supabaseClient.auth.signOut();
   }
 }

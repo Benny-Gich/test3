@@ -1,10 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 import 'package:test3/core/error/failure.dart';
 import 'package:test3/core/usecase/usecase.dart';
 import 'package:test3/core/entities/profile.dart';
 import 'package:test3/features/auth/domain/repository/auth_repository.dart';
 
+@LazySingleton()
 class UserSignUpImpl implements UseCase<Profile, UserSignUpParams> {
   final AuthRepository authRepository;
   UserSignUpImpl(this.authRepository);

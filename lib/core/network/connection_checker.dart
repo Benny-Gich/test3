@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:injectable/injectable.dart';
 
 enum InternetStatus { connected, disconnected }
 
@@ -14,6 +15,8 @@ enum InternetStatus { connected, disconnected }
 /// conn.onStatusChange.listen((status) { /* react */ });
 /// // or check conn.isConnected
 /// ```
+
+@LazySingleton()
 class InternetConnection {
   InternetConnection._internal();
   static final InternetConnection _instance = InternetConnection._internal();

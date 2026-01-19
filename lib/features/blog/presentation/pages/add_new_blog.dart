@@ -4,7 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test3/core/common/cubit/app_user/app_user_cubit.dart';
+import 'package:test3/core/common/cubit/app_user/app_user_bloc.dart';
 import 'package:test3/core/common/widgets/utils/show_snackbar.dart';
 import 'package:test3/core/theme/app_pallete.dart';
 import 'package:test3/features/blog/presentation/bloc/blog_bloc.dart';
@@ -52,13 +52,13 @@ class _AddNewBlogState extends State<AddNewBlog> {
       showSnackBar(context, 'Please select an image for the post.');
       return;
     }
-    final appUserState = context.read<AppUserCubit>().state;
-    if (appUserState is! AppUserLoggedIn) {
+    final profile = context.read<AppUserBloc>().state.profile;
+    if (profile==null) {
       showSnackBar(context, 'You must be logged in to upload a blog.');
       return;
     }
 
-    final posterId = appUserState.profile.id;
+    final posterId = profile.id;
 
     context.read<BlogBloc>().add(
       BlogUpload(

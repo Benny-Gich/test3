@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'dart:developer' as developer;
+import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test3/features/blog/data/datasources/blog_remote_data_source.dart';
 import '../../../../core/error/exception.dart';
 import '../models/blog_model.dart';
 
+@LazySingleton(as:BlogRemoteDataSource)
 class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
   final SupabaseClient supabaseClient;
   BlogRemoteDataSourceImpl(this.supabaseClient);

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:test3/core/entities/auth_entity.dart';
 import 'package:test3/core/error/failure.dart';
 import 'package:test3/core/entities/profile.dart';
 
@@ -17,4 +18,7 @@ abstract interface class AuthRepository {
     required String email,
     required String passWord,
   });
+
+  Stream<AuthEntity> watchUser();
+  Future<void> logout();
 }
