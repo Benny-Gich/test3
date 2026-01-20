@@ -85,18 +85,26 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Stream<AuthModel> watchCurrentUser() async* {
     final initialUser = supabaseClient.auth.currentUser;
+
+    // Always yield initial state
     if (initialUser == null) {
       yield AuthModel(status: AuthChangeEvent.signedOut);
+    } else {
+      // Fetch profile data for the initial user
+      final profile = await _getProfileData(initialUser.id);
+      yield AuthModel(status: AuthChangeEvent.signedIn, profile: profile);
     }
-    yield* supabase.client.auth.onAuthStateChange.map((state)  {
+
+    // Then listen to subsequent changes
+    yield* supabase.client.auth.onAuthStateChange.asyncMap((state) async {
       final event = state.event;
       final session = state.session;
       if (session?.user == null) {
         return AuthModel(status: event);
       }
       log('STATUS $event');
-      // final profile = await _getProfileData(session?.user.id);
-      return AuthModel(status: event, profile: null);
+      final profile = await _getProfileData(session?.user.id);
+      return AuthModel(status: event, profile: profile);
     }).distinct();
   }
 
