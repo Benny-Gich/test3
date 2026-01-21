@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
@@ -57,15 +58,18 @@ class BlogRepositoryImpl implements BlogRepository {
 
   @override
   Future<Either<Failure, List<Blog>>> getAllBlogs() async {
-    // try {
+     try {
     //   if (internetStatus != InternetStatus.connected) {
     //     final blogs = blogLocalDataSource.loadBlogs();
     //     return right(blogs);
     //   }
-    //   final blogs = await blogRemoteDataSource.getAllBlogs();
+      final blogs = await blogRemoteDataSource.getAllBlogs();
     //   blogLocalDataSource.uploadLocalBlogs(blogs: blogs as List<BlogModel>);
-    //   return right(blogs);
-    // }
-    return left(Failure());
+       return right(blogs);
+     }on Exception catch (e,s){
+      log('getAllBlogs',error: e,stackTrace: s);
+       return Left(Failure(e.toString()));
+     }
+    
   }
 }

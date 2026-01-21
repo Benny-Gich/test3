@@ -27,7 +27,10 @@ class BlogBloc extends HydratedBloc<BlogEvent, BlogState> {
     required this.getAllBlogs,
   }) : super(BlogState()) {
     on<BlogUpload>(_onBlogUpload);
-    on<BlogGetAllBlogs>(_onGetAllBlogs);
+    on<BlogGetAllBlogs>(
+      _onGetAllBlogs,
+      transformer: droppable(),
+    );
     on<SyncUploads>(_syncUploads);
     on<_SingleUploadEvent>(
       _singleUpload,
@@ -133,8 +136,8 @@ class BlogBloc extends HydratedBloc<BlogEvent, BlogState> {
       UploadBlogParams(
         blogId: blog.id,
         posterId: blog.posterId ?? '',
-        title: blog.title??'',
-        content: blog.content??'',
+        title: blog.title ?? '',
+        content: blog.content ?? '',
         image: blog.offlineImagePath?.let((path) => File(path)),
         topics: blog.topics,
       ),
